@@ -37,33 +37,46 @@ function drawGrid(container) {
     container.appendChild(grid); // Se agrega el contenedor grid al contenedor principal
 }
 
+function registerButtonEvent() {
+    const keys = document.querySelectorAll(".keyboard-row button");
+
+    for (let i = 0; i < keys.length; i++) {
+        keys[i].onclick = ({target}) => {
+            const key = target.getAttribute("data-key");
+            processKey(key);
+        }
+    }
+}
+
 function registerKeyboardEvent() {
     document.body.onkeydown = (event) => {
         const key = event.key;
+        processKey(key);
+    }
+}
 
-        if(key === 'Enter'){
-            if(state.currentCol === 5){
-                const word = getCurrentWord();
-                if(isValid(word)){
-                    revealWord(word); // Tells the player which letters are correct 
-                    state.currentRow++;
-                    state.currentCol = 0;
-                }else{
-                    alert('Not a valid word');
-                }
+function processKey(key) {
+    if(key === 'Enter'){
+        if(state.currentCol === 5){
+            const word = getCurrentWord();
+            if(isValid(word)){
+                revealWord(word); // Tells the player which letters are correct 
+                state.currentRow++;
+                state.currentCol = 0;
+            }else{
+                alert('Not a valid word');
             }
         }
-        if (key === 'Backspace') {
-            removeLetter();
-        }
-        if(isLetter(key)){
-            const keyUpperCase = key.toUpperCase();
-            addLetter(keyUpperCase);
-        }
-
-        updateGrid();
+    }
+    if (key === 'Backspace') {
+        removeLetter();
+    }
+    if(isLetter(key)){
+        const keyUpperCase = key.toUpperCase();
+        addLetter(keyUpperCase);
     }
 
+    updateGrid();
 }
 
 function getCurrentWord() {
@@ -109,8 +122,9 @@ function revealWord(guessWord){
 }
 
 function isLetter(key) {
-    return key.length === 1 && key.match(/[A-Z]/i);
+    return (key.length === 1 && key.match(/[A-Z]/i)) || /[Ññ]/.test(key);
 }
+
 
 function addLetter(letter) {
     if(state.currentCol === 5){
@@ -144,6 +158,7 @@ function startUp() {
     drawGrid(game); // Llama a drawGrid para crear las cajas dentro del contenedor grid
 
     registerKeyboardEvent();
+    registerButtonEvent();
 
     console.log(state.secret);
 }
