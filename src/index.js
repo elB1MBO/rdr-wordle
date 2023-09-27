@@ -58,7 +58,6 @@ function registerKeyboardEvent() {
         }
         if(isLetter(key)){
             const keyUpperCase = key.toUpperCase();
-            console.log(keyUpperCase);
             addLetter(keyUpperCase);
         }
 
